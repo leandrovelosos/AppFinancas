@@ -30,9 +30,45 @@ function AuthProvider({ children }) {
         }
     }
 
+    async function signIn(email, password) {
+        setLoadingAuth(true);
+
+        try {
+            const response = await api.post('/login', {
+                email: email,
+                password: password
+            })
+
+            //desconstruindo obj
+            const { id, name, token } = response.data;
+
+            //informacoes do user
+            const data = {
+                id,
+                name,
+                token,
+                email,
+            };
+
+            api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+            setUser({
+                id,
+                name,
+                email,
+            })
+
+            setLoadingAuth(false);
+
+        } catch (error) {
+            console.log('Erro: ', error)
+            setLoadingAuth(false);
+        }
+    }
+
     return (
         //para que as informacoes seja acessada por qualquer componente colocamos no value
-        <AuthContext.Provider value={{ signed: !!user,  user, signUp, loadingAuth }}>
+        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, loadingAuth }}>
             {children}
         </AuthContext.Provider>
     )
