@@ -23,7 +23,7 @@ export default function SignIn() {
                 <AreaInput>
 
                     <Input
-                        placeholder='Email'
+                        placeholder='E-mail'
 
                     />
 
