@@ -32,7 +32,7 @@ function AuthProvider({ children }) {
 
     return (
         //para que as informacoes seja acessada por qualquer componente colocamos no value
-        <AuthContext.Provider value={{ user, signUp, loadingAuth }}>
+        <AuthContext.Provider value={{ signed: !!user,  user, signUp, loadingAuth }}>
             {children}
         </AuthContext.Provider>
     )
