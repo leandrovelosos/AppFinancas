@@ -1,5 +1,6 @@
-import react, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import api from '../services/api';
 
@@ -7,10 +8,40 @@ export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
 
-    const navigation = useNavigation();
-
     const [user, setUser] = useState(null);
     const [loadingAuth, setLoadingAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        async function loadStorage() {
+            //busca o token
+            const storageUser = await AsyncStorage.getItem('@finToken');
+
+            if (storageUser) {
+                //faz a requisicao e verifica o token
+                const response = await api.get('/me', {
+                    headers: {
+                        'Authorization': `Bearer ${storageUser}`
+                    }
+                })
+                    //se nao tiver token ou estiver errado o usuario e deslogado
+                    .catch(() => {
+                        setUser(null);
+                    })
+
+                //se tudo der certo as informacoes sao capturadas e usadas nas proximas requsicoes agora o toke fica na variavel storageUser
+                api.defaults.headers['Authorization'] = `Bearer ${storageUser}`;
+                //pega os dados para serem utilizadas para relogar
+                setUser(response.data);
+                setLoading(false);
+            }
+
+            setLoading(false);
+        }
+
+        loadStorage();
+    }, [])
 
     async function signUp(email, password, nome) {
 
@@ -50,6 +81,8 @@ function AuthProvider({ children }) {
                 email,
             };
 
+            await AsyncStorage.setItem('@finToken', token);
+
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             setUser({
@@ -68,7 +101,7 @@ function AuthProvider({ children }) {
 
     return (
         //para que as informacoes seja acessada por qualquer componente colocamos no value
-        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, loadingAuth }}>
+        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, loadingAuth, loading }}>
             {children}
         </AuthContext.Provider>
     )
