@@ -99,9 +99,18 @@ function AuthProvider({ children }) {
         }
     }
 
+    //funcao para deslogar o usuario
+    async function signOut(){ 
+        await AsyncStorage.clear()
+           .then( () => {
+            setUser(null);
+           })
+        }
+    
+
     return (
         //para que as informacoes seja acessada por qualquer componente colocamos no value
-        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, loadingAuth, loading }}>
+        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, signOut, loadingAuth, loading }}>
             {children}
         </AuthContext.Provider>
     )
