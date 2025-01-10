@@ -8,8 +8,11 @@ export default function Header({ title }) {
     const navigation = useNavigation();
     return (
         <Container>
-            <ButtonMenu onPress={() =>navigation.openDrawer()}>
-                <Icon name="menu" size={35} color="#121212" />
+            <ButtonMenu onPress={() => navigation.openDrawer()}>
+                <Icon
+                    name="menu"
+                    size={35}
+                    color="#121212" />
             </ButtonMenu>
             {
                 title && (
