@@ -50,9 +50,22 @@ export default function Home() {
         return () => isActive = false;
 
         //para chamar a funcao novamente
-    }, [isFocused])
+    }, [isFocused, dateMovements])
 
+    async function handleDelete(id) {
+        try {
+            await api.delete('/receives/delete', {
+                params: {
+                    item_id: id
+                }
+            })
 
+            setDateMovements(new Date())
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         // <View>
         //     <Text>Tela Home</Text>
@@ -84,7 +97,7 @@ export default function Home() {
             <List
                 data={movements}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => <HistoricoList data={item} />}
+                renderItem={({ item }) => <HistoricoList data={item} deleteItem={handleDelete} />}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
             />

@@ -17,7 +17,16 @@ export default function New() {
         Keyboard.dismiss();
 
         if (isNaN(parseFloat(valueInput)) || type == null) {
-            alert('Preencha todos os campos')
+            Alert.alert(
+                'Atenção', // Título do alerta
+                'Preencha todos os campos', // Mensagem do alerta
+                [
+                    {
+                        text: 'OK',
+                        style: 'cancel', // Estilo do botão (opcional)
+                    },
+                ]
+            );
             return;
         }
 

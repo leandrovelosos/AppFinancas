@@ -1,28 +1,51 @@
 import React from "react";
 
 import { Container, TipoText, Tipo, IconView, ValorText } from "./styles";
+import { Alert, TouchableWithoutFeedback } from "react-native";
 import Icon from 'react-native-vector-icons/Feather'
 
 
-export default function HistoricoList({ data }) {
+export default function HistoricoList({ data, deleteItem }) {
+
+    function handleDeleteItem(){
+        Alert.alert(
+            'Atenção',
+            'Você tem certeza que deseja deletar esse registro?',
+            [
+                {
+                    text: 'Cancelar' ,
+                    style: 'cancel'
+                },
+                {
+                    text: 'Continuar',
+                    onPress: () => deleteItem(data.id)
+                }
+            ]
+        )
+    }
+
     return (
-        <Container>
+        <TouchableWithoutFeedback onLongPress={handleDeleteItem}>
 
-            <Tipo>
+            <Container>
 
-                <IconView tipo={data.type}>
+                <Tipo>
 
-                    <Icon name="arrow-down" size={20} color="#FFF" />
+                    <IconView tipo={data.type}>
 
-                    <TipoText>{data.type}</TipoText>
+                        <Icon name="arrow-down" size={20} color="#FFF" />
 
-                </IconView>
+                        <TipoText>{data.type}</TipoText>
 
-            </Tipo>
+                    </IconView>
 
-            <ValorText>
-                R$ {data.value}
-            </ValorText>
-        </Container>
+                </Tipo>
+
+                <ValorText>
+                    R$ {data.value}
+                </ValorText>
+            </Container>
+
+        </TouchableWithoutFeedback>
     )
 }
