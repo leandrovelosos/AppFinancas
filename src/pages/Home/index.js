@@ -1,18 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { AuthContext } from "../../contexts/auth";
-import { Background, ListBalance } from "./styles"
+import { Background, ListBalance, Area, Title, List } from "./styles"
 
 import Header from "../../components/Header";
 import api from "../../services/api";
 import { format } from 'date-fns'
 import { useIsFocused } from "@react-navigation/native";
 import BalaceItem from "../../components/BalanceItem";
+import HistoricoList from "../../components/HistoricoList";
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default function Home() {
     const isFocused = useIsFocused();
     const [listBalance, setListBalance] = useState([]);
     const [dateMovements, setDateMovements] = useState(new Date())
+    const [movements, setMovements] = useState([]);
 
     const { signOut, user } = useContext(AuthContext);
 
@@ -23,6 +26,12 @@ export default function Home() {
             //formata a data 
             let dateFormated = format(dateMovements, 'dd/MM/yyyy');
 
+            //busca as movimentacoes do dia
+            const receives = await api.get('receives', {
+                params: {
+                    date: dateFormated
+                }
+            })
             //faz a requisicao
             const balance = await api.get('/balance', {
                 params: {
@@ -31,6 +40,7 @@ export default function Home() {
             })
 
             if (isActive) {
+                setMovements(receives.data);
                 setListBalance(balance.data);
             }
         }
@@ -57,10 +67,29 @@ export default function Home() {
             <ListBalance
                 data={listBalance}
                 horizontal={true}
-                showsHorizontalScrolIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 keyExtractor={item => item.tag}
                 renderItem={({ item }) => (<BalaceItem data={item} />)}
             />
+
+            <Area>
+
+                <TouchableOpacity>
+                    <Icon name="event" color="#121212" size={30} />
+                </TouchableOpacity>
+
+                <Title>Ultimas movimentações</Title>
+            </Area>
+
+            <List
+                data={movements}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => <HistoricoList data={item} />}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+            />
+
+
         </Background>
 
     )
