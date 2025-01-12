@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Modal } from "react-native";
 import { AuthContext } from "../../contexts/auth";
 import { Background, ListBalance, Area, Title, List } from "./styles"
 
@@ -9,6 +9,7 @@ import { format } from 'date-fns'
 import { useIsFocused } from "@react-navigation/native";
 import BalaceItem from "../../components/BalanceItem";
 import HistoricoList from "../../components/HistoricoList";
+import CalendarModal from "../../components/CalendarModal";
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
     const [listBalance, setListBalance] = useState([]);
     const [dateMovements, setDateMovements] = useState(new Date())
     const [movements, setMovements] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const { signOut, user } = useContext(AuthContext);
 
@@ -61,20 +63,19 @@ export default function Home() {
             })
 
             setDateMovements(new Date())
-            
+
         } catch (error) {
             console.log(error)
         }
     }
+
+    function filterDateMovements(dateSelected) {
+        // console.log(dateSelected)
+        setDateMovements(dateSelected);
+    }
+
     return (
-        // <View>
-        //     <Text>Tela Home</Text>
-        //     <Text> Bem vindo {user.name}</Text>
-        //     <Button
-        //         title="Sair"
-        //         onPress={() => signOut()}
-        //     />
-        // </View>
+
         <Background>
             <Header title="Minhas movimentações" />
             <ListBalance
@@ -87,7 +88,7 @@ export default function Home() {
 
             <Area>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <Icon name="event" color="#121212" size={30} />
                 </TouchableOpacity>
 
@@ -102,6 +103,14 @@ export default function Home() {
                 contentContainerStyle={{ paddingBottom: 20 }}
             />
 
+            <Modal visible={modalVisible} animationType="fade" transparent={true}>
+
+                <CalendarModal
+                    setVisible={() => setModalVisible(false)}
+                    handleFilter={filterDateMovements}
+                />
+
+            </Modal>
 
         </Background>
 
