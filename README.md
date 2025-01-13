@@ -19,7 +19,36 @@ Este é um aplicativo de gerenciamento de finanças pessoais desenvolvido com Re
 - React native gesture handler
 - React native reanimated
 
+## Como iniciar o projeto
+
+#### Clone o repositorio
+```bash 
+git clone https://github.com/leandrovelosos/AppFinancas.git
+```
+#### Instale as dependencias
+```bash
+yarn install
+```
+#### Clone e configure o backend em
+```bash
+https://github.com/devfraga/backend-financas?tab=readme-ov-file#backend-finan%C3%A7as-app
+```
+#### Inicie o projeto
+```bash
+yarn start
+```
+
 ## App
-<img src="app.gif" style="width: 375px; height: auto;" />
+<img src="app1.png" style="width: 375px; height: auto;" />
+<br/>
+<br/>
+<img src="app2.png" style="width: 375px; height: auto;" />
+<br/>
+<br/>
+<img src="app3.png" style="width: 375px; height: auto;" />
+<br/>
+<br/>
+<img src="app4.png" style="width: 375px; height: auto;" />
+
 
 
